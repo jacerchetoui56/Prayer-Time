@@ -1,0 +1,40 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: sans-serif;
+}
+
+header {
+  min-height: 10vh;
+  box-shadow: 0 -5px 1px black;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+}
+.logo img {
+  width: 1.5rem;
+}
+main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 80vh;
+}
+
+main input {
+  width: max(40vw, 300px);
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  font-size: 1.2rem;
+}
+main .search {
+  position: relative;
+}
+main .search i {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
