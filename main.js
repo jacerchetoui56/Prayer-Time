@@ -17,6 +17,7 @@ let interval = null
 
 city.focus()
 function searchPrayerTime(cityName) {
+    //I usually hide the key but it's okey for now if it's shown
     fetch(`https://api.opencagedata.com/geocode/v1/json?q=${cityName}&key=0329aab0cda94946a805658568855af8`)
         .then(res => res.json())
         .then(data => {
