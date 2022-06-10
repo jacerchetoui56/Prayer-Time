@@ -29,7 +29,6 @@ function searchPrayerTime(cityName) {
                 + "&timezone=utc&time_format=0&method=1")
                 .then(res => res.json())
                 .then(data => {
-                    console.log(data)
                     let { Fajr, Dhuhr, Asr, Maghrib, Isha } = data.results
                     console.log(Fajr, Dhuhr, Asr, Maghrib, Isha)
                     fajrField.textContent = fixTime(Fajr)
@@ -50,8 +49,8 @@ function searchPrayerTime(cityName) {
                             }
                         }
                         remainingTime[indexNext].textContent = difference[0] + ":" + difference[1] + ":" + difference[2]
-                        //cuurent time
-                        currentTime.textContent = now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds()
+
+                        displayCurrentTime()
                         if (remainingTime == "00:00:00") {
                             adhan.play()
                         }
@@ -122,6 +121,13 @@ function nextPrayer(arrayTimes) {
     })
 }
 
+function displayCurrentTime() {
+    let now = new Date()
+    let nowHour = now.getHours() > 9 ? now.getHours() : "0" + now.getHours()
+    let nowMinutes = now.getMinutes() > 9 ? now.getMinutes() : "0" + now.getMinutes()
+    let nowSeconds = now.getSeconds() > 9 ? now.getSeconds() : "0" + now.getSeconds()
+    currentTime.textContent = nowHour + ":" + nowMinutes + ":" + nowSeconds
+}
 
 //!============= Event Listeners ===============
 if (localStorage.getItem('city')) {
