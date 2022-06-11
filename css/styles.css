@@ -1,0 +1,120 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;1,100&display=swap");
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: sans-serif;
+}
+
+header {
+  min-height: 10vh;
+  padding: 1rem;
+  box-shadow: 0 3px 10px -6px black;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+header .currentTime {
+  font-size: 1.2rem;
+}
+.logo {
+  display: flex;
+  align-items: center;
+}
+.logo h1 {
+  font-size: 1.5rem;
+  margin-left: 1rem;
+}
+.logo i {
+  font-size: 1.5rem;
+}
+
+main .search {
+  text-align: center;
+  position: relative;
+  margin: 3rem 0;
+}
+
+main .search i {
+  transform: translateX(-2rem);
+}
+
+main .search input {
+  padding: 0.5rem 1rem;
+  font-size: 1.2rem;
+  border-radius: 0.5rem;
+}
+
+.nextPage {
+  min-height: 35vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+}
+.title span {
+  color: #000b8b;
+  text-transform: capitalize;
+}
+
+.times {
+  width: 800px;
+  display: flex;
+  justify-content: space-evenly;
+  padding: 1rem;
+}
+
+.times .prayer {
+  text-align: center;
+  padding: 0.75rem 1.5rem;
+  background-color: #9999992e;
+  border-radius: 0.5rem;
+  font-family: "Roboto", sans-serif;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  transition: 0.5s;
+  margin: 0 1rem;
+}
+.times .prayer h2 {
+  font-size: 1.1rem;
+}
+.prayer .remaining-time {
+  margin: 0.3rem 0;
+  font-size: 1.3rem;
+  display: none;
+}
+
+.times .prayer.next {
+  color: white;
+  transform: scale(1.3);
+  background-image: linear-gradient(
+      to bottom,
+      rgba(44, 44, 44, 0.308),
+      rgba(31, 31, 31, 0.527)
+    ),
+    url(../images/fajr.jpeg);
+  background-size: cover;
+}
+.times .prayer.next .remaining-time {
+  display: block;
+}
+
+@media screen and (max-width: 800px) {
+  html {
+    font-size: 80%;
+  }
+  .times {
+    width: 80%;
+    flex-direction: column;
+    align-items: center;
+  }
+  .times .prayer {
+    width: fit-content;
+    padding: 1.5rem 2rem;
+    margin-bottom: 1rem;
+  }
+  .times .prayer.next {
+    margin: 2rem 0;
+  }
+}
