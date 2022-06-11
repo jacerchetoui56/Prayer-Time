@@ -162,6 +162,7 @@ city.addEventListener('keydown', (e) => {
             nextPage.classList.add('show')
         }, 1700);
         city.value = ""
+        //this is to make the keyboard disappear
         city.blur()
     }
 })
