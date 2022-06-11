@@ -16,6 +16,7 @@ let indexNext = 0
 let interval = null
 
 city.focus()
+
 async function searchPrayerTime(cityName) {
     //I usually hide the key but it's okey for now if it's shown
     let response = await fetch(`https://api.opencagedata.com/geocode/v1/json?q=${cityName}&key=0329aab0cda94946a805658568855af8`)
@@ -112,6 +113,7 @@ function nextPrayer(arrayTimes) {
             }
             remainingTime[index].textContent = diffrenceBetweenTimes(time, nowTime)
             indexNext = index
+            scrollToSalah(indexNext)
         }
     })
 }
@@ -123,6 +125,21 @@ function displayCurrentTime() {
     let nowSeconds = now.getSeconds() > 9 ? now.getSeconds() : "0" + now.getSeconds()
     currentTime.textContent = nowHour + ":" + nowMinutes + ":" + nowSeconds
 }
+
+//!==> this function is to scroll to the next Salah 
+//*-> it is synchronous so it will wait for the page to load before it starts
+function scrollToSalah(index) {
+    console.log(index)
+    switch (index) {
+        case 3: window.scrollTo({ top: maghribField.offsetTop + 100, behavior: 'smooth' });
+            break;
+        case 4: window.scrollTo({ top: ishaField.offsetTop + 100, behavior: 'smooth' })
+            break;
+    }
+}
+console.log(ishaField.offsetTop)
+
+
 
 //!============= Event Listeners ===============
 if (localStorage.getItem('city')) {
