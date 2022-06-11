@@ -162,6 +162,7 @@ city.addEventListener('keydown', (e) => {
             nextPage.classList.add('show')
         }, 1700);
         city.value = ""
+        city.blur()
     }
 })
 
