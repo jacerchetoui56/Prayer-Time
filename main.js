@@ -127,23 +127,26 @@ function displayCurrentTime() {
 }
 
 //!==> this function is to scroll to the next Salah 
-//*-> it is synchronous so it will wait for the page to load before it starts
+//* this variable is to check if I'm alrady in the right place or not
+let alreadyScrolled = false
 function scrollToSalah(index) {
-    console.log(index)
-    switch (index) {
-        case 3: window.scrollTo({ top: maghribField.offsetTop + 100, behavior: 'smooth' });
-            break;
-        case 4: window.scrollTo({ top: ishaField.offsetTop + 100, behavior: 'smooth' })
-            break;
+    if (!alreadyScrolled) {
+        switch (index) {
+            case 3: window.scrollTo({ top: maghribField.offsetTop + 150, behavior: 'smooth' });
+                break;
+            case 4: window.scrollTo({ top: ishaField.offsetTop + 150, behavior: 'smooth' })
+                break;
+        }
+        alreadyScrolled = true
     }
 }
-console.log(ishaField.offsetTop)
 
 
 
 //!============= Event Listeners ===============
 if (localStorage.getItem('city')) {
     searchPrayerTime(localStorage.getItem('city'))
+    alreadyScrolled = false
     setTimeout(() => {
         nextPage.classList.add('show')
     }, 1700);
@@ -154,6 +157,7 @@ city.addEventListener('keydown', (e) => {
         localStorage.setItem('city', cityName)
         clearInterval(interval)
         searchPrayerTime(cityName)
+        alreadyScrolled = false
         setTimeout(() => {
             nextPage.classList.add('show')
         }, 1700);
