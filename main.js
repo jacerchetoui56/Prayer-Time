@@ -16,48 +16,45 @@ let indexNext = 0
 let interval = null
 
 city.focus()
-function searchPrayerTime(cityName) {
+async function searchPrayerTime(cityName) {
     //I usually hide the key but it's okey for now if it's shown
-    fetch(`https://api.opencagedata.com/geocode/v1/json?q=${cityName}&key=0329aab0cda94946a805658568855af8`)
-        .then(res => res.json())
-        .then(data => {
-            let { lat, lng } = data.results[0].geometry
-            fetch("https://www.islamicfinder.us/index.php/api/prayer_times?latitude="
-                + lat
-                + "&longitude=" +
-                lng
-                + "&timezone=utc&time_format=0&method=1")
-                .then(res => res.json())
-                .then(data => {
-                    let { Fajr, Dhuhr, Asr, Maghrib, Isha } = data.results
-                    console.log(Fajr, Dhuhr, Asr, Maghrib, Isha)
-                    fajrField.textContent = fixTime(Fajr)
-                    dohrField.textContent = fixTime(Dhuhr)
-                    asrField.textContent = fixTime(Asr)
-                    maghribField.textContent = fixTime(Maghrib)
-                    ishaField.textContent = fixTime(Isha)
-                    name.textContent = cityName
-                    interval = setInterval(() => {
-                        let arrayPrayers = [fixTime(Fajr), fixTime(Dhuhr), fixTime(Asr), fixTime(Maghrib), fixTime(Isha)]
-                        nextPrayer(arrayPrayers)
-                        let now = new Date()
-                        let nowTime = "" + now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds()
-                        let difference = diffrenceBetweenTimes(arrayPrayers[indexNext], nowTime)
-                        for (let i = 0; i < difference.length; i++) {
-                            if (difference[i] < 10) {
-                                difference[i] = "0" + difference[i]
-                            }
-                        }
-                        remainingTime[indexNext].textContent = difference[0] + ":" + difference[1] + ":" + difference[2]
+    let response = await fetch(`https://api.opencagedata.com/geocode/v1/json?q=${cityName}&key=0329aab0cda94946a805658568855af8`)
+    let data = await response.json()
 
-                        displayCurrentTime()
-                        if (remainingTime == "00:00:00") {
-                            adhan.play()
-                        }
-                    }, 1000);
-                    return data
-                })
-        })
+    let { lat, lng } = data.results[0].geometry
+    let response2 = await fetch("https://www.islamicfinder.us/index.php/api/prayer_times?latitude="
+        + lat
+        + "&longitude=" +
+        lng
+        + "&timezone=utc&time_format=0&method=1")
+    let data2 = await response2.json()
+
+    let { Fajr, Dhuhr, Asr, Maghrib, Isha } = data2.results
+    fajrField.textContent = fixTime(Fajr)
+    dohrField.textContent = fixTime(Dhuhr)
+    asrField.textContent = fixTime(Asr)
+    maghribField.textContent = fixTime(Maghrib)
+    ishaField.textContent = fixTime(Isha)
+    name.textContent = cityName
+    interval = setInterval(() => {
+        let arrayPrayers = [fixTime(Fajr), fixTime(Dhuhr), fixTime(Asr), fixTime(Maghrib), fixTime(Isha)]
+        nextPrayer(arrayPrayers)
+        let now = new Date()
+        let nowTime = "" + now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds()
+        let difference = diffrenceBetweenTimes(arrayPrayers[indexNext], nowTime)
+        for (let i = 0; i < difference.length; i++) {
+            if (difference[i] < 10) {
+                difference[i] = "0" + difference[i]
+            }
+        }
+        remainingTime[indexNext].textContent = difference[0] + ":" + difference[1] + ":" + difference[2]
+
+        displayCurrentTime()
+        if (remainingTime[indexNext].textContent == "00:00:00") {
+            adhan.play()
+        }
+    }, 1000);
+
 }
 
 
@@ -69,7 +66,14 @@ function fixTime(salah) {
     return time.join(":")
 }
 
+
 function diffrenceBetweenTimes(time1, time2) {
+    //!->get the infos of today 
+    let now = new Date()
+    let thisYear = now.getFullYear()
+    let thisMonth = now.getMonth()
+    let thisDay = now.getDate()
+    //!->get the times in the parameters
     let time1Array = time1.split(":")
     let time2Array = time2.split(":")
     let time1Hours = parseInt(time1Array[0])
@@ -78,34 +82,25 @@ function diffrenceBetweenTimes(time1, time2) {
     let time2Hours = parseInt(time2Array[0])
     let time2Minutes = parseInt(time2Array[1])
     let time2Seconds = parseInt(time2Array[2])
-    let hours = ""
-    let minutes = ""
-    let seconds = ""
-
-    if (time1Hours > time2Hours) {
-        hours = time2Minutes > 0 ? time1Hours - time2Hours - 1 : time1Hours - time2Hours
-    } else {
-        hours = 24 - time2Hours + time1Hours
-    }
-
-    if (time1Minutes > time2Minutes) {
-        minutes = time2Seconds > 0 ? time1Minutes - time2Minutes - 1 : time1Minutes - time2Minutes
-
-    } else {
-        minutes = time2Seconds > 0 ? 60 - time2Minutes + time1Minutes - 1 : 60 - time2Minutes + time1Minutes
-    }
-
-    seconds = 60 - Math.abs(time1Seconds - time2Seconds) < 60 ? 60 - Math.abs(time1Seconds - time2Seconds) : 0
+    let time1date = new Date(thisYear, thisMonth, thisDay, time1Hours, time1Minutes, time1Seconds)
+    let time2date = new Date(thisYear, thisMonth, thisDay, time2Hours, time2Minutes, time2Seconds)
+    //!===> now let's get the diffrence between the times
+    let difference = time1date.getTime() - time2date.getTime()
+    difference = difference / 1000
+    let hours = Math.floor(difference / 3600)
+    let minutes = Math.floor((difference - hours * 3600) / 60)
+    let seconds = Math.floor(difference - hours * 3600 - minutes * 60)
 
     return [hours, minutes, seconds]
 }
 
+//!==> this function is to now what prayer is the next to style it accordingly
 function nextPrayer(arrayTimes) {
     arrayTimes.forEach((time, index) => {
         let now = new Date()
         let nowTime = "" + now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds()
-        if (time > nowTime &&
-            nowTime < arrayTimes[index + 1]
+        //!==> fortunately wa can compare two strings XD
+        if (time > nowTime
             && nowTime > arrayTimes[index - 1]) {
             for (let i = 0; i < times.length; i++) {
                 if (i == index) {
