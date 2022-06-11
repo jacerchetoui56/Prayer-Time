@@ -107,6 +107,7 @@ main .search input {
 
 footer {
   text-align: center;
+  margin-top: 10rem;
   padding: 0 0 1rem;
 }
 
@@ -139,5 +140,8 @@ footer {
   }
   .currentTime {
     font-size: 1.5rem !important;
+  }
+  footer {
+    margin-top: 0;
   }
 }
